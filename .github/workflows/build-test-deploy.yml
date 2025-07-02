@@ -30,37 +30,42 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
+    permissions:        # Defines the permissions required for this job
+      contents: write   # Grants write access to repository contents (e.g., for pushing changes)
+      pages: write      # Grants write access to GitHub Pages for deploying the site
+      id-token: write   # Grants write access to the ID token for authentication with external services
 
-    environment:
-      name: production
-      url: ${{ steps.deployment.output.page_url }}
+    environment:               # Configures the deployment environment
+      name: production         # Sets the environment name to "production" for organizational purposes
+      url: ${{ steps.deployment.output.page_url }}        # Sets the deployment URL to the output from the deployment step
 
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}   # Uses the default GitHub token for authentication to access the repository
+          
       - name: use node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4            # Sets up a Node.js environment
         with:
           node-version: '20.x'
+          
       - name: configure github pages
-        uses: actions/configure-pages@v4
-        with:
-          static_site_generator: next
+        uses: actions/configure-pages@v4       # Configures GitHub Pages settings for the repository
+        with:                                  # Configuration for the configure-pages action
+          static_site_generator: next          # Specifies that Next.js is used as the static site generator
+          
       - run: npm install
       - run: npm run build
+      
       - name: upload artifacts
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v3 # Uploads the build output as an artifact for GitHub Pages
         with:
-          path: './out'
+          path: './out'                        # Specifies the directory (./out) containing the built static site files
+          
       - name: deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+        id: deployment                         # Assigns an ID to this step for referencing its outputs (e.g., page_url)
+        uses: actions/deploy-pages@v4          # Deploys the uploaded artifact to GitHub Pages
 
 
 
