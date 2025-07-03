@@ -1,7 +1,7 @@
 name: build-test-deploy
 
 on: 
-  push:
+  #push:
   workflow_dispatch: #enables manual trigger button
 
 jobs:
